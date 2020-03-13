@@ -4,11 +4,11 @@ const expenseController = require('../../controllers/expense.controller');
 
 const router = express.Router();
 
-router.route('/')
+router
+  .route('/')
   .post(auth('createExpense'), expenseController.createExpense)
   .get(auth('getExpenses'), expenseController.getExpenses);
 
-router.route('/:expenseId')
-  .delete(auth('deleteExpense'), expenseController.deleteExpense);
+router.route('/:expenseId').delete(auth('deleteExpense'), expenseController.deleteExpense);
 
 module.exports = router;

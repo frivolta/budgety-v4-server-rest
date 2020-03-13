@@ -24,6 +24,11 @@ const expenseSchema = mongoose.Schema(
       default: '0',
       required: true,
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
   },
   {
     timestamps: true,
@@ -41,7 +46,6 @@ expenseSchema.methods.transform = function () {
   const expense = this;
   return expense.toJSON();
 };
-
 
 const Expense = mongoose.model('Expense', expenseSchema);
 

@@ -1,32 +1,38 @@
 const httpStatus = require('http-status');
 const AppError = require('../utils/AppError');
 const { Expense } = require('../models');
-const { getQueryOptions } = require('../utils/service.util');
 
-const createExpense = async expenseBody => {
-  const expense = await Expense.create(expenseBody);
+const createExpense = async (expenseBody, expenseUser) => {
+  const expenseObject = { ...expenseBody, user: expenseUser };
+  const expense = await Expense.create(expenseObject);
   return expense;
 };
 
-const getExpenses = async query => {
-  const options = getQueryOptions(query);
-  const expenses = await Expense.find(null, null, options);
+const getExpenses = async userId => {
+  const expenses = await Expense.find({ user: userId });
+  if (!expenses) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Expense not found');
+  }
   return expenses;
 };
 
 const getExpenseById = async expenseId => {
   const expense = await Expense.findById(expenseId);
   if (!expense) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Expense not found')
+    throw new AppError(httpStatus.NOT_FOUND, 'Expense not found');
   }
   return expense;
-}
+};
 
-const deleteExpense = async expenseId => {
+const deleteExpense = async (expenseId, userId) => {
   const expense = await getExpenseById(expenseId);
-  await expense.remove();
+  if (expense.user.toString === userId) {
+    await expense.remove();
+  } else {
+    throw new AppError(httpStatus.FORBIDDEN, 'Not authorized');
+  }
   return expense;
-}
+};
 
 module.exports = {
   createExpense,
