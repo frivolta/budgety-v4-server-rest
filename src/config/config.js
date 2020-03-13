@@ -40,7 +40,7 @@ module.exports = {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
   mongoose: {
-    url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''),
+    url: envVars.NODE_ENV === 'test' ? envVars.MONGODB_URL : envVars.MONGODB_TEST_URL,
     options: { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true },
   },
   jwt: {
