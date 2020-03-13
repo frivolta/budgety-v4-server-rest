@@ -36,12 +36,11 @@ if (error) {
   throw new Error(`Config validation error: ${error.message}`);
 }
 
-// Env variables
 module.exports = {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
   mongoose: {
-    url: envVars.NODE_ENV === 'test' ? envVars.MONGODB_URL : envVars.MONGODB_TEST_URL,
+    url: envVars.NODE_ENV === 'test' ? envVars.MONGODB_TEST_URL : process.env.MONGODB_URL,
     options: { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true },
   },
   jwt: {
