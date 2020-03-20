@@ -26,7 +26,7 @@ const getExpenseById = async expenseId => {
 
 const deleteExpense = async (expenseId, userId) => {
   const expense = await getExpenseById(expenseId);
-  if (expense.user.toString === userId) {
+  if (expense.user.toString() === userId.toString()) {
     await expense.remove();
   } else {
     throw new AppError(httpStatus.FORBIDDEN, 'Not authorized');
