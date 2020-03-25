@@ -7,6 +7,14 @@ const createUser = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user.transform());
 });
 
+const createTestUser = catchAsync(async (_, res) => {
+  const user = await userService.createUser({
+    email: process.env.TEST_USER_EMAIL,
+    password: process.env.TEST_USER_PASSWORD,
+  });
+  res.status(httpStatus.CREATED).send(user.transform());
+});
+
 const getUsers = catchAsync(async (req, res) => {
   const users = await userService.getUsers(req.query);
   const response = users.map(user => user.transform());
@@ -28,10 +36,18 @@ const deleteUser = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const deleteTestUser = catchAsync(async (_, res) => {
+  const user = await userService.getUserByEmail(process.env.TEST_USER_EMAIL);
+  await userService.deleteUser(user.id);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
 module.exports = {
   createUser,
+  createTestUser,
   getUsers,
   getUser,
   updateUser,
   deleteUser,
+  deleteTestUser,
 };
